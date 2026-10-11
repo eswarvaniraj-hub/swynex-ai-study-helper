@@ -201,8 +201,8 @@ def run_evaluation():
                 "output": None,
             })
 
-        # Brief pause to respect free-tier rate limits
-        time.sleep(1.5)
+        # Pause to strictly respect free-tier rate limits (15 RPM)
+        time.sleep(4.0)
 
     print("\n[+] All cases evaluated. Writing results to", OUTPUT_FILE)
     write_markdown_report(results_data)

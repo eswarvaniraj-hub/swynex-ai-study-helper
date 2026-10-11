@@ -12,6 +12,7 @@ This module contains:
 import json
 import os
 import re
+import time
 from typing import List, Tuple, Optional
 from pydantic import BaseModel, Field, ValidationError
 from dotenv import load_dotenv
@@ -24,7 +25,7 @@ load_dotenv()
 # ==============================================================================
 MAX_INPUT_CHARS: int = 8000
 MIN_INPUT_CHARS: int = 50
-DEFAULT_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+DEFAULT_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-flash-latest")
 
 # System prompt strictly instructing the model to treat input as passive educational data
 SYSTEM_INSTRUCTION: str = """You are an expert academic tutor and study assistant.
@@ -335,6 +336,14 @@ def generate_study_materials(
                 raise APIRateLimitError(
                     "Gemini API rate limit reached on the free tier. "
                     "Please wait 30-60 seconds before trying again."
+                ) from e
+            elif status_code == 503 or "UNAVAILABLE" in err_message:
+                if attempt < max_attempts:
+                    time.sleep(3.0)
+                    continue
+                raise AIStudyHelperError(
+                    "The Gemini API service is temporarily experiencing high traffic (503). "
+                    "Please wait a few moments and try again."
                 ) from e
             else:
                 raise AIStudyHelperError(

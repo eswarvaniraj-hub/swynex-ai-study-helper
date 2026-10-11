@@ -242,9 +242,9 @@ with st.sidebar:
     # Model selector
     selected_model = st.selectbox(
         "AI Model",
-        options=["gemini-2.5-flash", "gemini-1.5-flash"],
+        options=["gemini-flash-latest", "gemini-3.8-flash", "gemini-2.5-flash-lite"],
         index=0,
-        help="gemini-2.5-flash is Google's modern, ultra-fast model with generous free-tier quotas.",
+        help="gemini-flash-latest is Google's modern, ultra-fast model with generous free-tier quotas.",
     )
 
     with st.expander("❓ How to get a free Gemini API key"):
